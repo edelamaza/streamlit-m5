@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 
 
-st.title('Netflix Activty')
-st.subheader('Esteban de la Maza Castro A01720548')
+st.title('Netflix Activty - Esteban de la Maza Castro A01720548')
 
 DATA_URL = 'movies.csv'
 

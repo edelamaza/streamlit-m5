@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title('Bike Rides in NYC')
-st.subheader('Esteban de la Maza Castro A01720548')
+st.title('Bike Rides in NYC - Esteban de la Maza Castro A01720548')
 
 DATE_COLUMN = 'started_at'
 DATA_URL = 'citibike-tripdata.csv'
