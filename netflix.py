@@ -1,60 +1,51 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
 
+st.title('Netflix Activty')
+st.subheader('Esteban de la Maza Castro A01720548')
 
-st.title('Netflix app')
+DATA_URL = 'movies.csv'
 
-DATE_COLUMN = 'released'
-DATA_URL = ('movies.csv')
-
-import codecs
 
 @st.cache
 def load_data(nrows):
-    doc = codecs.open('movies.csv','rU','latin1')
-    data = pd.read_csv(doc, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    return data
+    return pd.read_csv(DATA_URL, nrows=nrows)
 
-def filter_data_by_filme(filme):
-    filtered_data_filme = data[data['name'].str.upper().str.contains(filme)]
-    return filtered_data_filme
+
+def filter_data_by_film(film):
+    return data[data['name'].str.lower().str.contains(film)]
+
 
 def filter_data_by_director(director):
-    filtered_data_director = data[data['director'] == director]
-    return filtered_data_director
+    return data[data['director'] == director]
 
 
+with st.spinner('Loading data...'):
+    data = load_data(1000)
+    st.success('Done!')
+
+if st.sidebar.checkbox('Show all films'):
+    st.subheader('All Films')
+    st.dataframe(data)
 
 
-data_load_state = st.text('Loading cicle nyc data...')
-data = load_data(1000)
-data_load_state.text("Done! (using st.cache)")
+filmTitle = st.sidebar.text_input('Film title:')
+btnFilterTitle = st.sidebar.button('Search')
 
-if st.sidebar.checkbox('Mostrar todos los filmes'):
-    st.subheader('Todos los filmes')
-    st.write(data)
-
-
-titulofilme = st.sidebar.text_input('Titulo del filme :')
-btnBuscar = st.sidebar.button('Buscar filmes')
-
-if (btnBuscar):
-   data_filme = filter_data_by_filme(titulofilme.upper())
-   count_row = data_filme.shape[0]  # Gives number of rows
-   st.write(f"Total filmes mostrados : {count_row}")
-   st.write(data_filme)
+if btnFilterTitle:
+    data_film = filter_data_by_film(filmTitle.lower())
+    count_row = data_film.shape[0]
+    st.metric(label="Total Films", value=count_row)
+    st.dataframe(data_film)
 
 
+selected_director = st.sidebar.selectbox(
+    "Select Director", data['director'].unique())
+btnFilterbyDirector = st.sidebar.button('Filter director ')
 
-selected_director = st.sidebar.selectbox("Seleccionar Director", data['director'].unique())
-btnFilterbyDirector = st.sidebar.button('Filtrar director ')
-
-if (btnFilterbyDirector):
-   filterbydir = filter_data_by_director(selected_director)
-   count_row = filterbydir.shape[0]  # Gives number of rows
-   st.write(f"Total filmes : {count_row}")
-
-   st.dataframe(filterbydir)
+if btnFilterbyDirector:
+    filterbydir = filter_data_by_director(selected_director)
+    count_row = filterbydir.shape[0]
+    st.metric(label="Total Films", value=count_row)
+    st.dataframe(filterbydir)
